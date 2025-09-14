@@ -139,7 +139,19 @@ with tab1:
             #data['Adj Close'].plot()
 
             #frame = pd.DataFrame(data['Open'], columns = data['Adj Close'])
-            st.line_chart( data['Adj Close'])
+            # Fix for MultiIndex columns - use Close instead of Adj Close
+            try:
+                if hasattr(data.columns, 'levels'):  # MultiIndex
+                    st.line_chart(data['Close'])
+                else:  # Single Index
+                    st.line_chart(data['Adj Close'] if 'Adj Close' in data.columns else data['Close'])
+            except KeyError:
+                # Fallback: use the first price column available
+                price_cols = [col for col in data.columns if 'Close' in str(col)]
+                if price_cols:
+                    st.line_chart(data[price_cols[0]])
+                else:
+                    st.write("Chart data unavailable")
          
  
        
@@ -184,26 +196,33 @@ with tab1:
         keywords = "$" + result
         limit=5
 
-        tweets = tweepy.Cursor(api.search_tweets, q=keywords, count=100, tweet_mode='extended').items(limit)
+        try:
+            tweets = tweepy.Cursor(api.search_tweets, q=keywords, count=100, tweet_mode='extended').items(limit)
 
-        # tweets = api.user_timeline(screen_name=user, count=limit, tweet_mode='extended')
+            # tweets = api.user_timeline(screen_name=user, count=limit, tweet_mode='extended')
 
-        # create DataFrame
-        columns = ['User', 'Tweet','URL']
-        data = []
+            # create DataFrame
+            columns = ['User', 'Tweet','URL']
+            data = []
 
-        for tweet in tweets:
-            hyperlink = f"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}"
+            for tweet in tweets:
+                hyperlink = f"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}"
+                data.append([tweet.user.screen_name, tweet.full_text, hyperlink ])
 
-            data.append([tweet.user.screen_name, tweet.full_text, hyperlink ])
-
-           
-
-        df1 = pd.DataFrame(data, columns=columns)
-
-        
-
-        st.dataframe(df1)  # Same as st.write(df)
+            df1 = pd.DataFrame(data, columns=columns)
+            st.dataframe(df1)  # Same as st.write(df)
+            
+        except tweepy.errors.Forbidden as e:
+            st.error("Twitter API Access Issue")
+            st.write("⚠️ The current Twitter API access level doesn't support tweet search.")
+            st.write("To enable Twitter features, you need:")
+            st.write("• Twitter API v2 Basic or higher access level")
+            st.write("• Update your developer account at https://developer.twitter.com")
+            st.write("")
+            st.info("💡 Stock analysis and charts still work perfectly without Twitter API!")
+        except Exception as e:
+            st.error(f"Twitter API Error: {str(e)}")
+            st.info("💡 Stock analysis and charts still work perfectly without Twitter API!")
     
     with tab1b:
         "Reddit"

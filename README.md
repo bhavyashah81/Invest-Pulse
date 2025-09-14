@@ -1,6 +1,6 @@
 # Invest Pulse
 
-A comprehensive financial analytics platform that consolidates stock market data, social sentiment analysis, and risk assessment tools into a single, intuitive interface for traders and investors.
+A financial analytics platform that consolidates stock market data, social sentiment analysis, and risk assessment tools.
 
 ## Features
 

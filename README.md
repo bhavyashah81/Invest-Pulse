@@ -37,7 +37,7 @@ python3 -m streamlit run main_.py
 ```
 
 This will:
-- Launch the dashboard on http://localhost:8501
+- Launch the dashboard
 - Load the comprehensive ticker database (7,000+ tickers)
 - Enable real-time stock price tracking and analysis
 - Fetch social media discussions for selected tickers (requires API setup)

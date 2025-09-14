@@ -18,9 +18,9 @@ A comprehensive financial analytics platform that consolidates stock market data
 
 ## Technologies and Languages Used
 
-**Languages**: Python
+**Languages**: Python  
 **Framework**: Streamlit  
-**Libraries**: yfinance, pandas, matplotlib, tweepy, praw (Reddit API), PIL  
+**Libraries**: yfinance, pandas, matplotlib, tweepy, praw (Reddit API), PIL, requests  
 **APIs**: Yahoo Finance API, Twitter API, Reddit API  
 **Data Visualization**: Matplotlib, Streamlit native charts
 
